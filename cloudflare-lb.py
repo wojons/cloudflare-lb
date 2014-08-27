@@ -50,22 +50,23 @@ def add_rec(rec):
             return True
         else:
             del_rec(result_add['response']['rec']['obj']['rec_id'], rec) #faild to orange cloud
-            print "Add Failed: "+rec[0]+". "+result_edit['msg']
+            print 'Add Failed: {0}. {1}'.format(rec[0], result_edit['msg'])
             return False
     
-    print 'Add Failed: '+rec[0]+'. '+result_add['msg']
+    print 'Add Failed: {0}. {1}'.format(rec[0], result_add['msg'])
     return False
 
 def healthcheck(host):
     try:
-        run = urllib.urlopen(PROTO+"://"+host[0]+":"+str(PORT)+"/")
+        run = urllib.urlopen("{0}://{1}:{2}/".format(PROTO, host[0], str(PORT)))
         if get_rec_id(RECORD, host[0]) == False: #needs to be added
             add_rec(host)
         else:
             print host[0]+': Passed'
     except IOError: #we were not able to do what was needed
         rec_id = get_rec_id(RECORD, host[0]) #get the id of the record
-        if rec_id != False:
+        if rec_id is not False:
+            print host[0]+': Removing Host'
             del_rec(rec_id, host[0])
         else:
             print host[0]+': Still dead'
@@ -86,7 +87,7 @@ if __name__=="__main__":
         
         if INTERVAL >= 0:
             lapse = int(time.time() - start_time)
-            print "DONE: sleeping for "+str(INTERVAL-lapse)+" seconds"
+            print "DONE: sleeping for {0} seconds".format(str(INTERVAL-lapse))
             time.sleep(INTERVAL-lapse) #sleep for some set time seconds
         else:
             exit()
